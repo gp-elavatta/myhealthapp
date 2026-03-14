@@ -3,7 +3,6 @@
 import { Suspense, useEffect, useState, useCallback } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase/client'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { Button } from '@/components/ui/button'
@@ -32,27 +31,21 @@ function ClinicsContent() {
   })
   const [sortBy, setSortBy] = useState<'name' | 'wait_time'>('name')
   const [showFilters, setShowFilters] = useState(false)
-  const supabase = createClient()
 
   const fetchClinics = useCallback(async () => {
     setLoading(true)
-    let query = supabase
-      .from('clinics')
-      .select(`
-        *,
-        clinic_locations(*),
-        clinic_hours(*),
-        wait_time_snapshots(estimated_wait_minutes, queue_depth, active_practitioners, created_at),
-        clinic_services(*, service:services(*))
-      `)
-      .eq('status', 'approved')
 
-    if (filters.walkIn) query = query.eq('is_walk_in', true)
-    if (filters.virtual) query = query.eq('is_virtual', true)
+    let results: any[] = []
+    try {
+      const res = await fetch('/api/clinics')
+      const data = await res.json()
+      results = Array.isArray(data) ? data : []
+    } catch {
+      results = []
+    }
 
-    const { data } = await query.order('name')
-
-    let results = data || []
+    if (filters.walkIn) results = results.filter((c: any) => c.is_walk_in)
+    if (filters.virtual) results = results.filter((c: any) => c.is_virtual)
 
     // Client-side filtering
     if (searchQuery) {
@@ -87,7 +80,7 @@ function ClinicsContent() {
 
     setClinics(results)
     setLoading(false)
-  }, [supabase, searchQuery, filters, sortBy])
+  }, [searchQuery, filters, sortBy])
 
   useEffect(() => {
     fetchClinics()
