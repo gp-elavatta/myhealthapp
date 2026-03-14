@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useMemo, useCallback } from 'react'
 import dynamic from 'next/dynamic'
-import { createClient } from '@/lib/supabase/client'
 import { Header } from '@/components/layout/header'
 import { MapSearch } from '@/components/map/map-search'
 import { ClinicListPanel } from '@/components/map/clinic-list-panel'
@@ -50,23 +49,16 @@ export default function HomePage() {
     [latitude, longitude]
   )
 
-  // Fetch clinics
+  // Fetch clinics via server API route (bypasses RLS)
   useEffect(() => {
     async function fetchClinics() {
-      const supabase = createClient()
-      const { data } = await supabase
-        .from('clinics')
-        .select(`
-          *,
-          clinic_locations(*),
-          clinic_hours(*),
-          wait_time_snapshots(estimated_wait_minutes, queue_depth, created_at),
-          clinic_services(*, service:services(*))
-        `)
-        .eq('status', 'approved')
-        .order('name')
-
-      setClinics(data || [])
+      try {
+        const res = await fetch('/api/clinics')
+        const data = await res.json()
+        setClinics(Array.isArray(data) ? data : [])
+      } catch {
+        setClinics([])
+      }
       setLoading(false)
     }
     fetchClinics()

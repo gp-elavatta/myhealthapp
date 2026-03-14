@@ -2,7 +2,7 @@ export const dynamic = 'force-dynamic'
 
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase/server'
+import { createClient as createServiceClient } from '@supabase/supabase-js'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { Button } from '@/components/ui/button'
@@ -16,7 +16,10 @@ import { formatWaitTime, getWaitTimeBg, formatTime, isClinicOpenNow } from '@/li
 import type { DayOfWeek } from '@/lib/types/database'
 
 async function getClinic(id: string) {
-  const supabase = await createClient()
+  const supabase = createServiceClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
   const { data } = await supabase
     .from('clinics')
     .select(`
