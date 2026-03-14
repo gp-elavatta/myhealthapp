@@ -74,3 +74,109 @@ body {
 .animate-pulse-soft {
   animation: pulse-soft 2s ease-in-out infinite;
 }
+
+/* Leaflet overrides */
+.leaflet-container {
+  font-family: inherit;
+  z-index: 0;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 0;
+}
+
+.leaflet-popup-content {
+  margin: 0;
+  min-width: 260px;
+  max-width: 300px;
+}
+
+.leaflet-popup-close-button {
+  top: 8px !important;
+  right: 8px !important;
+  width: 24px !important;
+  height: 24px !important;
+  font-size: 18px !important;
+  color: #6b7280 !important;
+}
+
+.leaflet-popup-tip {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Custom clinic markers */
+.clinic-marker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 700;
+  color: white;
+  border: 2.5px solid white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.clinic-marker:hover {
+  transform: scale(1.2);
+  z-index: 1000 !important;
+}
+
+.clinic-marker.wait-green { background-color: #16a34a; }
+.clinic-marker.wait-yellow { background-color: #ca8a04; }
+.clinic-marker.wait-orange { background-color: #ea580c; }
+.clinic-marker.wait-red { background-color: #dc2626; }
+.clinic-marker.wait-unknown { background-color: #6b7280; }
+
+/* Map overlay glass effect */
+.map-glass {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Bottom sheet animation */
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.bottom-sheet-enter {
+  animation: slideUp 0.3s ease-out;
+}
+
+/* Panel slide animation */
+@keyframes slideRight {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+.panel-enter {
+  animation: slideRight 0.3s ease-out;
+}
+
+/* Chat widget animations */
+@keyframes chatSlideUp {
+  from { opacity: 0; transform: translateY(20px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.animate-in {
+  animation: chatSlideUp 0.3s ease-out forwards;
+}
+
+@keyframes bounceIn {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.chat-fab-enter {
+  animation: bounceIn 0.4s ease-out forwards;
+}
