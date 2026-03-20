@@ -14,17 +14,15 @@ function getMarkerColorClass(waitMinutes: number | undefined): string {
 
 function createClinicIcon(waitMinutes: number | undefined, isSelected: boolean) {
   const colorClass = getMarkerColorClass(waitMinutes)
-  const label = waitMinutes !== undefined && waitMinutes !== null
-    ? `${waitMinutes}`
-    : '?'
-  const size = isSelected ? 44 : 36
+  const size = isSelected ? 20 : 14
+  const outerSize = size + 8
 
   return L.divIcon({
     className: '',
-    html: `<div class="clinic-marker ${colorClass}" style="width:${size}px;height:${size}px;font-size:${isSelected ? '13' : '11'}px;${isSelected ? 'box-shadow:0 0 0 3px #0d9488, 0 2px 8px rgba(0,0,0,0.3);' : ''}">${label}</div>`,
-    iconSize: [size, size],
-    iconAnchor: [size / 2, size / 2],
-    popupAnchor: [0, -(size / 2) - 4],
+    html: `<div class="clinic-pin ${colorClass}${isSelected ? ' selected' : ''}" style="width:${outerSize}px;height:${outerSize}px;"><div class="clinic-pin-inner" style="width:${size}px;height:${size}px;"></div></div>`,
+    iconSize: [outerSize, outerSize],
+    iconAnchor: [outerSize / 2, outerSize / 2],
+    popupAnchor: [0, -(outerSize / 2) - 4],
   })
 }
 
