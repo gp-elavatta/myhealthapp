@@ -43,16 +43,19 @@ export default function SignupPage() {
     }
 
     if (data.user) {
-      // Create profile
-      const { error: profileError } = await supabase.from('profiles').insert({
-        id: data.user.id,
-        email,
-        full_name: fullName,
-        phone: phone || null,
-        role: 'patient',
+      // Create profile via server API (service role bypasses RLS)
+      const profileRes = await fetch('/api/auth/signup-profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: data.user.id,
+          email,
+          full_name: fullName,
+          phone: phone || null,
+        }),
       })
 
-      if (profileError) {
+      if (!profileRes.ok) {
         setError('Account created but profile setup failed. Please contact support.')
         setLoading(false)
         return
