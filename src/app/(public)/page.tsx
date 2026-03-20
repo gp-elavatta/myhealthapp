@@ -8,6 +8,7 @@ import { ClinicListPanel } from '@/components/map/clinic-list-panel'
 import { useGeolocation } from '@/lib/hooks/useGeolocation'
 import { Spinner } from '@/components/ui/loading'
 import { isClinicOpenNow } from '@/lib/utils'
+import { ClinicCategory, getClinicCategory } from '@/lib/utils/clinic-category'
 
 const ClinicMap = dynamic(
   () => import('@/components/map/clinic-map'),
@@ -29,6 +30,7 @@ interface Filters {
   walkIn: boolean
   virtual: boolean
   shortWait: boolean
+  category: ClinicCategory
 }
 
 export default function HomePage() {
@@ -41,6 +43,7 @@ export default function HomePage() {
     walkIn: false,
     virtual: false,
     shortWait: false,
+    category: 'all',
   })
 
   const { latitude, longitude, loading: locating, locate } = useGeolocation()
@@ -78,6 +81,11 @@ export default function HomePage() {
         if (!matchesName && !matchesCity && !matchesPostal && !matchesAddress) {
           return false
         }
+      }
+
+      // Category filter
+      if (filters.category !== 'all') {
+        if (getClinicCategory(clinic) !== filters.category) return false
       }
 
       // Filters

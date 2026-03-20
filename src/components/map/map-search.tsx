@@ -1,12 +1,14 @@
 'use client'
 
-import { Search, LocateFixed, Loader2 } from 'lucide-react'
+import { Search, LocateFixed, Loader2, ChevronDown } from 'lucide-react'
+import { ClinicCategory, clinicCategories } from '@/lib/utils/clinic-category'
 
 interface Filters {
   openNow: boolean
   walkIn: boolean
   virtual: boolean
   shortWait: boolean
+  category: ClinicCategory
 }
 
 interface MapSearchProps {
@@ -19,7 +21,7 @@ interface MapSearchProps {
   resultCount: number
 }
 
-const filterOptions = [
+const toggleOptions = [
   { key: 'openNow' as const, label: 'Open Now' },
   { key: 'walkIn' as const, label: 'Walk-in' },
   { key: 'virtual' as const, label: 'Virtual' },
@@ -35,6 +37,8 @@ export function MapSearch({
   isLocating,
   resultCount,
 }: MapSearchProps) {
+  const activeCategory = clinicCategories.find(c => c.value === filters.category)
+
   return (
     <div className="absolute top-4 left-4 right-4 z-[1000] pointer-events-none">
       <div className="max-w-2xl mx-auto pointer-events-auto">
@@ -67,7 +71,32 @@ export function MapSearch({
 
         {/* Filters */}
         <div className="flex items-center gap-2 mt-2 overflow-x-auto pb-1 scrollbar-none">
-          {filterOptions.map((opt) => {
+          {/* Category dropdown */}
+          <div className="relative shrink-0 pointer-events-auto">
+            <select
+              value={filters.category}
+              onChange={(e) =>
+                onFilterChange({ ...filters, category: e.target.value as ClinicCategory })
+              }
+              className={`appearance-none pl-3 pr-7 py-1.5 rounded-full text-xs font-medium transition-colors shadow-sm cursor-pointer outline-none ${
+                filters.category !== 'all'
+                  ? 'bg-teal-600 text-white shadow-teal-200'
+                  : 'map-glass text-gray-700 hover:bg-white border border-gray-200/50'
+              }`}
+            >
+              {clinicCategories.map((cat) => (
+                <option key={cat.value} value={cat.value}>
+                  {cat.label}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className={`absolute right-2 top-1/2 -translate-y-1/2 h-3 w-3 pointer-events-none ${
+              filters.category !== 'all' ? 'text-white' : 'text-gray-500'
+            }`} />
+          </div>
+
+          {/* Toggle filters */}
+          {toggleOptions.map((opt) => {
             const active = filters[opt.key]
             return (
               <button
