@@ -134,6 +134,40 @@ body {
 .clinic-marker.wait-red { background-color: #dc2626; }
 .clinic-marker.wait-unknown { background-color: #6b7280; }
 
+/* Cluster markers */
+.cluster-marker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 13px;
+  font-weight: 700;
+  color: white;
+  border: 3px solid white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  background-color: #0d9488;
+}
+
+.cluster-marker.cluster-small {
+  width: 40px;
+  height: 40px;
+  background-color: #0d9488;
+}
+
+.cluster-marker.cluster-medium {
+  width: 45px;
+  height: 45px;
+  background-color: #0f766e;
+}
+
+.cluster-marker.cluster-large {
+  width: 50px;
+  height: 50px;
+  font-size: 14px;
+  background-color: #115e59;
+}
+
 /* Map overlay glass effect */
 .map-glass {
   background: rgba(255, 255, 255, 0.92);
